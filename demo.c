@@ -171,9 +171,9 @@ void put_character_demo()
         .mode = HAGL_CHAR_MODE_OPAQUE,
         .background_color = colour1,
         .foreground_color = colour2,
-        .scale_x_numerator = 4,
+        .scale_x_numerator = 1 + (rand() % 4),
         .scale_x_denominator = 1,
-        .scale_y_numerator = 4,
+        .scale_y_numerator = 1 + (rand() % 4),
         .scale_y_denominator = 1,
     };
     hagl_put_char_styled(backend, ascii, x0, y0, &style);
@@ -193,9 +193,9 @@ void put_text_demo()
         .mode = HAGL_CHAR_MODE_OPAQUE,
         .background_color = colour1,
         .foreground_color = colour2,
-        .scale_x_numerator = 4,
+        .scale_x_numerator = 1 + (rand() % 4),
         .scale_x_denominator = 1,
-        .scale_y_numerator = 4,
+        .scale_y_numerator = 1 + (rand() % 4),
         .scale_y_denominator = 1,
     };
     hagl_put_text_styled(backend, L"YO! MTV raps.", x0, y0, &style);
