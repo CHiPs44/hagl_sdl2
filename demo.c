@@ -160,19 +160,45 @@ void put_character_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    // uint16_t colour = rand() % 0xffff;
+    uint16_t colour1 = rand() % 0xffff;
+    uint16_t colour2 = rand() % 0xffff;
     wchar_t ascii = rand() % 127;
 
-    hagl_put_char(backend, ascii, x0, y0, colour, font6x9);
+    // hagl_put_char(backend, ascii, x0, y0, colour, font6x9);
+    hagl_char_style_t style = {
+        .font = font6x9,
+        .mode = HAGL_CHAR_MODE_OPAQUE,
+        .background_color = colour1,
+        .foreground_color = colour2,
+        .scale_x_numerator = 4,
+        .scale_x_denominator = 1,
+        .scale_y_numerator = 4,
+        .scale_y_denominator = 1,
+    };
+    hagl_put_char_styled(backend, ascii, x0, y0, &style);
 }
 
 void put_text_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    // uint16_t colour = rand() % 0xffff;
+    uint16_t colour1 = rand() % 0xffff;
+    uint16_t colour2 = rand() % 0xffff;
 
-    hagl_put_text(backend, L"YO! MTV raps.", x0, y0, colour, font6x9);
+    // hagl_put_text(backend, L"YO! MTV raps.", x0, y0, colour, font6x9);
+    hagl_char_style_t style = {
+        .font = font6x9,
+        .mode = HAGL_CHAR_MODE_OPAQUE,
+        .background_color = colour1,
+        .foreground_color = colour2,
+        .scale_x_numerator = 4,
+        .scale_x_denominator = 1,
+        .scale_y_numerator = 4,
+        .scale_y_denominator = 1,
+    };
+    hagl_put_text_styled(backend, L"YO! MTV raps.", x0, y0, &style);
 }
 
 void put_pixel_demo()
