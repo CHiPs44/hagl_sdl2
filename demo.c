@@ -55,6 +55,11 @@ uint32_t pps_callback(uint32_t interval, void *param)
     return interval;
 }
 
+color_t get_random_color()
+{
+    return hagl_color(backend, rand() % 0xff, rand() % 0xff, rand() % 0xff);
+}
+
 void polygon_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
@@ -67,7 +72,7 @@ void polygon_demo()
     int16_t y3 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x4 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y4 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
     int16_t vertices[10] = {x0, y0, x1, y1, x2, y2, x3, y3, x4, y4};
 
     hagl_draw_polygon(backend, 5, vertices, colour);
@@ -85,7 +90,7 @@ void fill_polygon_demo()
     int16_t y3 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x4 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y4 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
     int16_t vertices[10] = {x0, y0, x1, y1, x2, y2, x3, y3, x4, y4};
 
     hagl_fill_polygon(backend, 5, vertices, colour);
@@ -96,7 +101,7 @@ void circle_demo()
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
     uint16_t r = (rand() % 40);
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_draw_circle(backend, x0, y0, r, colour);
 }
@@ -106,7 +111,7 @@ void fill_circle_demo()
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
     uint16_t r = (rand() % 40);
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_fill_circle(backend, x0, y0, r, colour);
 }
@@ -117,7 +122,7 @@ void line_demo()
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x1 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y1 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_draw_line(backend, x0, y0, x1, y1, colour);
 }
@@ -134,7 +139,7 @@ void rectangle_demo()
     int16_t y3 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x4 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y4 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_draw_rectangle(backend, x0, y0, x1, y1, colour);
 }
@@ -151,7 +156,7 @@ void fill_rectangle_demo()
     int16_t y3 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x4 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y4 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_fill_rectangle(backend, x0, y0, x1, y1, colour);
 }
@@ -160,9 +165,9 @@ void put_character_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    // uint16_t colour = rand() % 0xffff;
-    uint16_t colour1 = rand() % 0xffff;
-    uint16_t colour2 = rand() % 0xffff;
+    // uint16_t colour = get_random_color();
+    uint16_t colour1 = get_random_color();
+    uint16_t colour2 = get_random_color();
     wchar_t ascii = rand() % 127;
 
     // hagl_put_char(backend, ascii, x0, y0, colour, font6x9);
@@ -183,9 +188,9 @@ void put_text_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    // uint16_t colour = rand() % 0xffff;
-    uint16_t colour1 = rand() % 0xffff;
-    uint16_t colour2 = rand() % 0xffff;
+    // uint16_t colour = get_random_color();
+    uint16_t colour1 = get_random_color();
+    uint16_t colour2 = get_random_color();
 
     // hagl_put_text(backend, L"YO! MTV raps.", x0, y0, colour, font6x9);
     hagl_char_style_t style = {
@@ -205,7 +210,7 @@ void put_pixel_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_put_pixel(backend, x0, y0, colour);
 }
@@ -218,7 +223,7 @@ void triangle_demo()
     int16_t y1 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x2 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y2 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_draw_triangle(backend, x0, y0, x1, y1, x2, y2, colour);
 }
@@ -231,7 +236,7 @@ void fill_triangle_demo()
     int16_t y1 = (rand() % 280) - 20; /* -20 ... 260 */
     int16_t x2 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y2 = (rand() % 280) - 20; /* -20 ... 260 */
-    uint16_t colour = rand() % 0xffff;
+    uint16_t colour = get_random_color();
 
     hagl_fill_triangle(backend, x0, y0, x1, y1, x2, y2, colour);
 }
