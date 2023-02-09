@@ -38,6 +38,8 @@ SPDX-License-Identifier: MIT-0
 #include "aps.h"
 #include "font6x9.h"
 #include "backend.h"
+#include "blit.h"
+#include "bitmap.h"
 
 hagl_backend_t *backend;
 static fps_instance_t fps;
@@ -241,6 +243,23 @@ void fill_triangle_demo()
     hagl_fill_triangle(backend, x0, y0, x1, y1, x2, y2, colour);
 }
 
+void blit_demo()
+{
+    static uint8_t buffer[1024];
+    static hagl_bitmap_t bitmap;
+    color_t color = get_random_color();
+    bitmap.buffer = buffer;
+    hagl_get_glyph(backend, (wchar_t)('A' + rand() % 26), color, &bitmap, font6x9);
+    // printf(
+    //     "color=%06x width=%d, height=%d, depth=%d, pitch=%d, buffer=%p, size=%d\n", 
+    //     color, bitmap.width, bitmap.height, bitmap.depth, bitmap.pitch, bitmap.buffer, bitmap.size
+    // );
+    // hagl_put_char(backend, 'X', rand() % backend->width, rand() % backend->height, color, font6x9);
+    // hagl_blit_xy_transparent(backend, rand() % backend->width, rand() % backend->height, &bitmap, 0);
+    hagl_blit_xywh_transparent(backend, rand() % backend->width, rand() % backend->height, 24, 36, &bitmap, 0);
+    // hagl_blit_xywh      (backend, rand() % backend->width, rand() % backend->height, 48, 72, &bitmap);
+}
+
 void scale_blit_demo()
 {
 }
@@ -279,7 +298,10 @@ int main()
     bool quit = false;
     SDL_Event event;
 
-    void (*demo[13])();
+    // void (*demo[1])();
+    // demo[0] = blit_demo;
+
+    void (*demo[14])();
     demo[0] = rgb_demo;
     demo[1] = put_character_demo;
     demo[2] = put_pixel_demo;
@@ -293,6 +315,7 @@ int main()
     demo[10] = polygon_demo;
     demo[11] = fill_polygon_demo;
     demo[12] = put_text_demo;
+    demo[13] = blit_demo;
 
     printf("\n");
     printf("Press any key to change demo.\n");
@@ -322,7 +345,7 @@ int main()
                 {
                     aps_reset(&pps);
                     hagl_clear(backend);
-                    current_demo = (current_demo + 1) % 13;
+                    current_demo = (current_demo + 1) % 14;
                 }
             }
         }
