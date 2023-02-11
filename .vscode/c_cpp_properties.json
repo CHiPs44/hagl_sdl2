@@ -3,7 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "~/src/hagl_sdl2/",
+                "~/src/hagl/include/",
+                "~/src/hagl/include/hagl/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

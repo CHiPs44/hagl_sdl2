@@ -24,6 +24,7 @@ SOFTWARE.
 SPDX-License-Identifier: MIT-0
 
 */
+
 #include <time.h>
 #include <stdint.h>
 #include <stdbool.h>
