@@ -55,7 +55,7 @@ static hagl_window_t dirty = {
 };
 
 static void
-put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
+put_pixel(void *self, int16_t x0, int16_t y0, hagl_color_t color)
 {
     /* Bitmap already provides a put pixel function. */
     bb.put_pixel(&bb, x0, y0, color);
@@ -68,7 +68,7 @@ put_pixel(void *self, int16_t x0, int16_t y0, color_t color)
     dirty.y1 = max(dirty.y1, y0);
 }
 
-static color_t
+static hagl_color_t
 get_pixel(void *self, int16_t x0, int16_t y0)
 {
     /* Bitmap already provides a get pixel function. */
@@ -118,10 +118,10 @@ close(void *self)
     SDL_Quit();
 }
 
-static color_t
+static hagl_color_t
 color(void *self, uint8_t r, uint8_t g, uint8_t b)
 {
-    color_t color = rgb565(r, g, b);
+    hagl_color_t color = rgb565(r, g, b);
     return (color >> 8) | (color << 8);
 }
 
@@ -129,18 +129,14 @@ void
 hagl_hal_init(hagl_backend_t *backend)
 {
     if (!backend->buffer) {
-        backend->buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * (DISPLAY_DEPTH / 8), sizeof(uint8_t));
+        backend->buffer = calloc(DISPLAY_WIDTH * DISPLAY_HEIGHT * DISPLAY_DEPTH / 8, sizeof(uint8_t));
         printf("Allocated back buffer to address %p.\n", (void *) backend->buffer);
     } else {
         printf("Using provided back buffer at address %p.\n", (void *) backend->buffer);
     }
 
     memset(&bb, 0, sizeof(hagl_bitmap_t));
-    bb.width = DISPLAY_WIDTH;
-    bb.height = DISPLAY_HEIGHT;
-    bb.depth = DISPLAY_DEPTH;
-
-    bitmap_init(&bb, backend->buffer);
+    hagl_bitmap_init(&bb, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_DEPTH, backend->buffer);
 
     backend->width = DISPLAY_WIDTH;
     backend->height = DISPLAY_HEIGHT;

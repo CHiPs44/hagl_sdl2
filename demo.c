@@ -42,6 +42,8 @@ SPDX-License-Identifier: MIT-0
 #include "blit.h"
 #include "bitmap.h"
 
+#define HAGL_HAS_STYLED_TEXT_AND_TRANSPARENCY
+
 hagl_backend_t *backend;
 static fps_instance_t fps;
 static aps_instance_t pps;
@@ -58,7 +60,7 @@ uint32_t pps_callback(uint32_t interval, void *param)
     return interval;
 }
 
-color_t get_random_color()
+hagl_color_t get_random_color()
 {
     return hagl_color(backend, rand() % 0xff, rand() % 0xff, rand() % 0xff);
 }
@@ -166,36 +168,47 @@ void fill_rectangle_demo()
 
 void put_character_demo()
 {
-    int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
-    int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    // uint16_t color = get_random_color();
-    uint16_t color1 = get_random_color();
-    uint16_t color2 = get_random_color();
-    wchar_t ascii = rand() % 127;
+    static int16_t x0 = 0; // (rand() % 360) - 20; /* -20 ... 340 */
+    static int16_t y0 = 0; // (rand() % 280) - 20; /* -20 ... 260 */
+    wchar_t ascii = 32 + rand() % 96;
 
-    // hagl_put_char(backend, ascii, x0, y0, color, font6x9);
+#ifdef HAGL_HAS_STYLED_TEXT_AND_TRANSPARENCY
+    static int16_t zoom = 2;
+    uint16_t color1 = get_random_color(); // hagl_color(backend, 0x80, 0x80, 0x80);
+    uint16_t color2 = get_random_color(); // hagl_color(backend, 0xff, 0xff, 0xff);
     hagl_char_style_t style = {
         .font = font6x9,
-        .mode = HAGL_CHAR_MODE_OPAQUE,
+        .mode = rand() % 2 == 0 ? HAGL_CHAR_MODE_OPAQUE : HAGL_CHAR_MODE_TRANSPARENT,
         .background_color = color1,
         .foreground_color = color2,
-        .scale_x_numerator = 1 + (rand() % 4),
+        .scale_x_numerator = zoom, //1 + (rand() % 4),
         .scale_x_denominator = 1,
-        .scale_y_numerator = 1 + (rand() % 4),
+        .scale_y_numerator = zoom, //1 + (rand() % 4),
         .scale_y_denominator = 1,
     };
     hagl_put_char_styled(backend, ascii, x0, y0, &style);
+#else
+    static int16_t zoom = 1;
+    uint16_t color = get_random_color();
+    hagl_put_char(backend, ascii, x0, y0, color, font6x9);
+#endif
+    x0 += 6 * zoom;
+    if (x0 > backend->width) {
+        x0 = 0;
+        y0 += 9 * zoom;
+        if (y0 > backend->height) {
+            y0 = 0;
+        }
+    }
 }
 
 void put_text_demo()
 {
     int16_t x0 = (rand() % 360) - 20; /* -20 ... 340 */
     int16_t y0 = (rand() % 280) - 20; /* -20 ... 260 */
-    // uint16_t color = get_random_color();
+#ifdef HAGL_HAS_STYLED_TEXT_AND_TRANSPARENCY
     uint16_t color1 = get_random_color();
     uint16_t color2 = get_random_color();
-
-    // hagl_put_text(backend, L"YO! MTV raps.", x0, y0, color, font6x9);
     hagl_char_style_t style = {
         .font = font6x9,
         .mode = HAGL_CHAR_MODE_TRANSPARENT,
@@ -207,6 +220,10 @@ void put_text_demo()
         .scale_y_denominator = 1,
     };
     hagl_put_text_styled(backend, L"YO! MTV raps.", x0, y0, &style);
+#else
+    uint16_t color = get_random_color();
+    hagl_put_text(backend, L"YO! MTV raps.", x0, y0, color, font6x9);
+#endif
 }
 
 void put_pixel_demo()
@@ -246,20 +263,18 @@ void fill_triangle_demo()
 
 void blit_demo()
 {
-    static uint8_t buffer[1024];
+    static uint8_t buffer[9 * 6 * sizeof(hagl_color_t)];
     static hagl_bitmap_t bitmap;
-    color_t color = get_random_color();
+    hagl_color_t color = get_random_color();
     int zoom = 1 + rand() % 4;
     bitmap.buffer = buffer;
     hagl_get_glyph(backend, (wchar_t)('A' + rand() % 26), color, &bitmap, font6x9);
-    // printf(
-    //     "color=%06x width=%d, height=%d, depth=%d, pitch=%d, buffer=%p, size=%d\n", 
-    //     color, bitmap.width, bitmap.height, bitmap.depth, bitmap.pitch, bitmap.buffer, bitmap.size
-    // );
-    // hagl_put_char(backend, 'X', rand() % backend->width, rand() % backend->height, color, font6x9);
-    // hagl_blit_xy_transparent(backend, rand() % backend->width, rand() % backend->height, &bitmap, 0);
+#ifdef HAGL_HAS_STYLED_TEXT_AND_TRANSPARENCY
+//  hagl_blit_xy_transparent  (backend, rand() % backend->width, rand() % backend->height,                     &bitmap, 0);
     hagl_blit_xywh_transparent(backend, rand() % backend->width, rand() % backend->height, 6 * zoom, 9 * zoom, &bitmap, 0);
-    // hagl_blit_xywh      (backend, rand() % backend->width, rand() % backend->height, 48, 72, &bitmap);
+#else
+    hagl_blit_xywh            (backend, rand() % backend->width, rand() % backend->height, 6 * zoom, 9 * zoom, &bitmap);
+#endif
 }
 
 void rgb_demo()
@@ -297,7 +312,7 @@ int main()
     SDL_Event event;
 
     // void (*demo[1])();
-    // demo[0] = blit_demo;
+    // demo[0] = put_character_demo;
 
     void (*demo[14])();
     demo[0] = rgb_demo;
